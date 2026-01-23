@@ -1,24 +1,56 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 export default function Login() {
   const router = useRouter();
 
-  const [user, setUser] = React.useState({
+  const [user, setUser] = useState({
     email: "",
     password: "",
   });
 
-  const onLogin = async () => {
-    console.log("LOGIN DATA:", user);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-    // later you can call API here
-    // after success:
-    // router.push("/profile");
-  };
+ const onLogin = async () => {
+  if (loading) return;
+
+  try {
+    setLoading(true);
+
+    const response = await axios.post(
+      "/api/users/login",
+      user,
+      { withCredentials: true }
+    );
+
+    console.log("Login success", response.data);
+    toast.success("Login success");
+    router.push("/profile");
+
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || "Login failed";
+    console.log("Login failed", message);
+    toast.error(message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // ✅ FORM VALIDATION
+  useEffect(() => {
+    if (user.email.trim() && user.password.trim()) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-300 px-4">
@@ -26,25 +58,28 @@ export default function Login() {
         
         {/* Heading */}
         <h1 className="text-3xl font-bold text-center text-gray-800">
-          Login
+          {loading ? "Processing..." : "Login"}
         </h1>
+
         <p className="text-center text-gray-500 mt-2">
           Welcome back! Please login to your account
         </p>
 
-        {/* Form */}
-        <div className="mt-6 space-y-4">
+        {/* ✅ FORM (Enter key support) */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onLogin();
+          }}
+          className="mt-6 space-y-4"
+        >
           
           {/* Email */}
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label className="block text-sm font-medium text-gray-700">
               Email
             </label>
             <input
-              id="email"
               type="email"
               value={user.email}
               onChange={(e) =>
@@ -57,14 +92,10 @@ export default function Login() {
 
           {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
-              id="password"
               type="password"
               value={user.password}
               onChange={(e) =>
@@ -77,12 +108,19 @@ export default function Login() {
 
           {/* Button */}
           <button
-            onClick={onLogin}
-            className="w-full bg-orange-500 text-white py-2 rounded-md font-semibold hover:bg-orange-600 transition"
+            type="submit"
+            disabled={buttonDisabled || loading}
+            className={`w-full py-2 rounded-md font-semibold transition
+              ${
+                buttonDisabled || loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-orange-500 hover:bg-orange-600 text-white"
+              }
+            `}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
-        </div>
+        </form>
 
         {/* Footer */}
         <p className="text-sm text-center text-gray-600 mt-6">
