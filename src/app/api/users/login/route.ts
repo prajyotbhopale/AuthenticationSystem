@@ -14,37 +14,29 @@ export async function POST(request: NextRequest) {
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return NextResponse.json(
-        { message: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     // Check password
-    const validPassword = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return NextResponse.json(
         { message: "Invalid password" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Create token payload
     const tokenData = {
       id: user._id,
-      username: user.name,
+      username: user.username,
       email: user.email,
     };
 
     // Create JWT
-    const token = jwt.sign(
-      tokenData,
-      process.env.JWT_SECRET_KEY!,
-      { expiresIn: "1d" }
-    );
+    const token = jwt.sign(tokenData, process.env.JWT_SECRET_KEY!, {
+      expiresIn: "1d",
+    });
 
     // Create response
     const response = NextResponse.json({
@@ -55,17 +47,13 @@ export async function POST(request: NextRequest) {
     // ✅ Set cookie correctly
     response.cookies.set("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false, // 👈 IMPORTANT for localhost
       sameSite: "lax",
       path: "/",
     });
 
     return response;
-
   } catch (error: any) {
-    return NextResponse.json(
-      { message: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
