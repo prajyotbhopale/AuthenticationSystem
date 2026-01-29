@@ -2,10 +2,10 @@ import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { sendEmail } from "@/helpers/mailer";
 
 export async function POST(request: NextRequest) {
   try {
-    
     await connect();
 
     const { username, email, password } = await request.json();
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     if (!username || !email || !password) {
       return NextResponse.json(
         { error: "All fields are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     if (existingUser) {
       return NextResponse.json(
         { error: "User already exists" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -36,20 +36,24 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
     });
+    const savedUser = await newUser.save();
 
+    // send verification email (optional)
+
+    await sendEmail({ email, emailType: "VERIFY", userId: savedUser._id });
     return NextResponse.json(
       {
         message: "User created successfully",
         success: true,
         userId: newUser._id,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error: any) {
     console.error("SIGNUP API ERROR:", error);
     return NextResponse.json(
       { error: error.message || "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
