@@ -17,31 +17,27 @@ export default function Login() {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
 
- const onLogin = async () => {
-  if (loading) return;
+  const onLogin = async () => {
+    if (loading) return;
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const response = await axios.post(
-      "/api/users/login",
-      user,
-      { withCredentials: true }
-    );
+      const response = await axios.post("/api/users/login", user, {
+        withCredentials: true,
+      });
 
-    console.log("Login success", response.data);
-    toast.success("Login success");
-    router.push("/profile");
-
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message || "Login failed";
-    console.log("Login failed", message);
-    toast.error(message);
-  } finally {
-    setLoading(false);
-  }
-};
+      console.log("Login success", response.data);
+      toast.success("Login success");
+      router.push("/profile");
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Login failed";
+      console.log("Login failed", message);
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // ✅ FORM VALIDATION
   useEffect(() => {
@@ -55,7 +51,6 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-300 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
-        
         {/* Heading */}
         <h1 className="text-3xl font-bold text-center text-gray-800">
           {loading ? "Processing..." : "Login"}
@@ -73,7 +68,6 @@ export default function Login() {
           }}
           className="mt-6 space-y-4"
         >
-          
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -82,9 +76,7 @@ export default function Login() {
             <input
               type="email"
               value={user.email}
-              onChange={(e) =>
-                setUser({ ...user, email: e.target.value })
-              }
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
               placeholder="you@example.com"
               className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
@@ -98,9 +90,7 @@ export default function Login() {
             <input
               type="password"
               value={user.password}
-              onChange={(e) =>
-                setUser({ ...user, password: e.target.value })
-              }
+              onChange={(e) => setUser({ ...user, password: e.target.value })}
               placeholder="••••••••"
               className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
@@ -130,6 +120,12 @@ export default function Login() {
             className="text-orange-500 font-medium hover:underline"
           >
             Sign up
+          </Link>
+          <Link
+            href="/forgotpassword"
+            className="text-sm text-blue-600 hover:underline"
+          >
+            Forgot password?
           </Link>
         </p>
       </div>

@@ -6,6 +6,8 @@ export function proxy(request: NextRequest) {
 
   const isAuthPage = path === '/login' || path === '/signup'
   const isVerifyEmailPage = path.startsWith('/verifyemail')
+  const isForgotPasswordPage = path === '/forgotpassword'
+  const isResetPasswordPage = path.startsWith('/resetpassword')
 
   const token = request.cookies.get('token')?.value || ''
 
@@ -14,8 +16,15 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.nextUrl))
   }
 
+  // Allow public pages without token
+  const isPublicPage =
+    isAuthPage ||
+    isVerifyEmailPage ||
+    isForgotPasswordPage ||
+    isResetPasswordPage
+
   // Not logged-in user trying to access protected pages
-  if (!isAuthPage && !isVerifyEmailPage && !token) {
+  if (!isPublicPage && !token) {
     return NextResponse.redirect(new URL('/login', request.nextUrl))
   }
 
@@ -28,6 +37,8 @@ export const config = {
     '/profile',
     '/login',
     '/signup',
-    '/verifyemail/:path*'
+    '/verifyemail/:path*',
+    '/forgotpassword',
+    '/resetpassword/:path*'
   ]
 }
