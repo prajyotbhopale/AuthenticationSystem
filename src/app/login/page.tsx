@@ -77,7 +77,7 @@ export default function Login() {
               type="email"
               value={user.email}
               onChange={(e) => setUser({ ...user, email: e.target.value })}
-              placeholder="you@example.com"
+              placeholder="Enter your email"
               className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
@@ -91,7 +91,7 @@ export default function Login() {
               type="password"
               value={user.password}
               onChange={(e) => setUser({ ...user, password: e.target.value })}
-              placeholder="••••••••"
+              placeholder="Enter your password"
               className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
@@ -121,6 +121,7 @@ export default function Login() {
           >
             Sign up
           </Link>
+          <br />
           <Link
             href="/forgotpassword"
             className="text-sm text-blue-600 hover:underline"

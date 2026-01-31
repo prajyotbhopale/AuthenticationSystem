@@ -8,8 +8,7 @@ connect();
 
 export async function POST(request: NextRequest) {
   try {
-    console.log("RESET PASSWORD API HIT");
-
+    
     const { token, password } = await request.json();
 
     if (!token || !password) {
@@ -48,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     await user.save();
 
-    console.log("Password reset successfully for user:", user._id);
+  
 
     return NextResponse.json({
       message: "Password reset successfully",

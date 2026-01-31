@@ -63,6 +63,7 @@ export default function SignUp() {
           <input
             type="text"
             value={user.username}
+            placeholder="Enter your name"
             onChange={(e) =>
               setUser({ ...user, username: e.target.value })
             }
@@ -78,6 +79,7 @@ export default function SignUp() {
           <input
             type="email"
             value={user.email}
+            placeholder="Enter your email"
             onChange={(e) =>
               setUser({ ...user, email: e.target.value })
             }
@@ -93,6 +95,7 @@ export default function SignUp() {
           <input
             type="password"
             value={user.password} // ✅ FIXED
+            placeholder="Enter your password"
             onChange={(e) =>
               setUser({ ...user, password: e.target.value })
             }

@@ -16,8 +16,10 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.nextUrl))
   }
 
+
   // Allow public pages without token
   const isPublicPage =
+    path === "/" ||
     isAuthPage ||
     isVerifyEmailPage ||
     isForgotPasswordPage ||

@@ -37,32 +37,44 @@ export default function ProfilePage() {
     }
   };
 
- return (
-  <div>
-    <h1>Profile Page</h1>
-    <p>Welcome to your profile!</p>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-white px-4">
+      <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-700">
+        
+        <h1 className="text-3xl font-bold text-center mb-2">
+          Profile
+        </h1>
 
-    <br />
+        <p className="text-center text-gray-400 mb-6">
+          Welcome to your profile page
+        </p>
 
-    {/* 👇 DETAILS SHOW HERE DIRECTLY */}
-    <h2 className="text-2xl font-bold bg-green-500 p-2 text-white">
-      {userId ? userId : "Click Get User Details"}
-    </h2>
+        {/* User ID box */}
+        <div className="mb-6">
+          <h2 className="text-sm text-gray-400 mb-2">User ID</h2>
+          <div className="bg-green-600/20 border border-green-500 text-green-400 rounded-lg p-3 text-center font-mono break-all">
+            {userId ? userId : "Click “Get User Details”"}
+          </div>
+        </div>
 
-    <button
-      onClick={getUserDetails}
-      className="bg-green-500 mt-4 text-white font-bold py-2 px-4 rounded"
-    >
-      Get User Details
-    </button>
+        {/* Buttons */}
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={getUserDetails}
+            className="w-full bg-green-600 hover:bg-green-700 transition text-white font-semibold py-2.5 rounded-lg"
+          >
+            Get User Details
+          </button>
 
-    <button
-      onClick={logout}
-      className="bg-blue-500 mt-4 ml-2 text-white font-bold py-2 px-4 rounded"
-    >
-      Logout
-    </button>
-  </div>
-);
+          <button
+            onClick={logout}
+            className="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-semibold py-2.5 rounded-lg"
+          >
+            Logout
+          </button>
+        </div>
 
+      </div>
+    </div>
+  );
 }
